@@ -1,99 +1,70 @@
-let [seconds,minutes] = [0 ,24];
-let displayTime = document.getElementById("displayTime") ;
-let buttonStart = document.getElementById("button-start") ;
-let buttonStop = document.getElementById("button-stop") ;
-let buttonReset = document.getElementById("button-reset") ;
+
+let displayTime = document.getElementById("displayTime") ; 
+let StartButton = document.getElementById("button-start") ;
+let StopButton = document.getElementById("button-stop") ;
+let ResetButton = document.getElementById("button-reset") ;
+
+let [seconds,minutes] = [0 ,25];
 let timer = null ;
 
+StartButton.addEventListener("click",watchStart) ;
+StopButton.addEventListener("click",watchStop) ;
+ResetButton.addEventListener("click",watchReset) ;
+window.addEventListener("DOMContentLoaded",getLocal)
 
-
-buttonStart.addEventListener("click",startPomo) ;
-buttonStop.addEventListener("click",stopPomo) ;
-buttonReset.addEventListener("click",resetPomo) ;
-window.addEventListener("DOMContentLoaded",deneme)
-
-
-function deneme(){
-
-    minutes = JSON.parse(localStorage.getItem("pomoMinutes"));
-    seconds = JSON.parse(localStorage.getItem("pomoSeconds"));
-    if (minutes === null || seconds === null || (minutes === 0 && seconds === 0)) {
-        resetTime(); 
-    }
+function getLocal(){
+    seconds = JSON.parse(localStorage.getItem("secondsPomo"));
+    minutes = JSON.parse(localStorage.getItem("minutesPomo"));
     putDisplay();
-
- 
-
-    putDisplay();
-    
 }
 
 
-function counter(){
-    if(seconds == 0){
-        minutes--
-        seconds = 59
-    }else{
-        seconds--
-    }
-
-    sendlocal();
-    putDisplay()
-
-
- 
+function  counter(){
+if(seconds == 0 ){
+    minutes-- ;
+    seconds = 59 ;
+}else{
+    seconds --
 }
 
-function startPomo(){
-    
+putDisplay();
+setLocal()
 
-    if(timer =! null){
-        clearInterval(timer) ;
-    }
-    
-    timer =setInterval(counter,1000);
-    
-    
 
-}
-
-function stopPomo(){
-
-    clearInterval(timer) ;
-
-}
-
-function resetPomo(){
-    clearInterval(timer) ; 
-    [seconds,minutes] = [0 ,25]
-    displayTime.innerHTML = "25:"+"00" ;
-    sendlocal() ;
 
 
 }
 
-
-function FormatDisplay(time){
-   return time < 10 ? "0" + time : time
+function watchStart(){
+if(timer != null){
+    clearInterval(timer);
+}
+timer = setInterval(counter,1000);
 }
 
+function watchStop(){
+    clearInterval(timer);
+}
 
-function sendlocal(){
-    localStorage.setItem("pomoSeconds",JSON.stringify(seconds));
-    localStorage.setItem("pomoMinutes",JSON.stringify(minutes));
+function watchReset(){
+    [seconds,minutes] = [0 ,25] ;
+    clearInterval(timer);
+    displayTime.innerHTML = "25" + ":" + "00";
+    setLocal()
+
+
 }
 
 
 function putDisplay(){
 
-    let FormattedSeconds = FormatDisplay(seconds);
-    let FormattedMinutes = FormatDisplay(minutes);
-    displayTime.innerHTML = FormattedMinutes + ":" + FormattedSeconds ;
-
-
+let s =seconds < 10 ? "0"+seconds : seconds;
+let m=minutes < 10 ? "0"+minutes : minutes;
+displayTime.innerHTML = m + ":" + s 
 }
 
-function resetTime(){
-    [seconds,minutes] = [59 ,24];
-    sendlocal();
+function setLocal(){
+    localStorage.setItem("secondsPomo",JSON.stringify(seconds)) ;
+    localStorage.setItem("minutesPomo",JSON.stringify(minutes)) ;
 }
+
